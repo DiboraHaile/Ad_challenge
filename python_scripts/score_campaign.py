@@ -3,8 +3,9 @@ import pandas as pd
 class ScoreCampaign:
     def __init__(self,path:str):
         self.path = path
+        self.load_df()
 
-    def return_df(self)-> None:
+    def load_df(self)-> None:
         """ Returns pandas dataframe from a specified csv file"""
         self.df = pd.read_csv(self.path)
 
@@ -34,8 +35,8 @@ class ScoreCampaign:
             the campaignId and return top 10 sites based 
             on scores"""
         engagement_rate_df = self.return_engagement_rate_df()
-        engagement_rate_df[engagement_rate_df["Campaign_id"] == campaign_id].sort_values(by = "engagement_rate", ascending=True).reset_index()
-        return engagement_rate_df
+        top_sites = engagement_rate_df[engagement_rate_df["Campaign_id"] == campaign_id].sort_values(by = "engagement_rate", ascending=True).reset_index().head(10)
+        return top_sites,top_sites["Site"]
 
 
 
