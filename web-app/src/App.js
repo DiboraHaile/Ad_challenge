@@ -6,33 +6,13 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 
 
-// function App() {
-//   const {campaign_id_list, setCampaignIdList} = useState([]);
-
-//   useEffect(() => {
-//     fetch("http:localhost:5000").then(response => 
-//       response.json().then(data => {
-//         setCampaignIdList(data.ids)
-//       })
-//     );
-//   }, []);
-
-//   return(
-//     <div className="App">
-//     <CampaignSelect campaign_id_list={campaign_id_list}/>
-//     </div>
-//   );
-// }
-
-// export default App;
-
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
                   data:{"ids":["hello"]},
                   selected_id: "",
-                  top_sites_info: {},
+                  top_sites_info: [],
                   };
     this.handleSelect = this.handleSelect.bind(this);
     // this.handleClick = this.handleClick.bind(this);
@@ -74,12 +54,9 @@ class App extends Component {
       })
     });
   }
-    
-
-  
+      
   render(){
     const data = this.state.data
-    const top_sites = this.state.top_sites_info
     const prepare_options =  function (){
     const options = []
       for (let i = 1; i <= data['ids'].length; i++) {
@@ -88,8 +65,6 @@ class App extends Component {
       return options; 
     }
 
-  
-    
   return (
     
     <div className="App">
@@ -101,10 +76,10 @@ class App extends Component {
       </div>
       
         <button onClick={this.handleClick}> Get Information </button>
-        
+
         <div>
           <ul>
-          {this.state.top_sites_info.map(listitem => (<li className="list-group-item list-group-item-primary">{listitem}</li>))}
+          {this.state.top_sites_info.map(listitem => (<li key={listitem} className="list-group-item list-group-item-primary">{listitem}</li>))}
           </ul>
           
         </div>
