@@ -1,15 +1,30 @@
 import logo from './logo.svg';
-import './App.css';
 import React, { Component, useEffect ,useState} from 'react'
-import { Switch, Route } from 'react-router-dom'
-import Select from 'react-select'
 import useFetch from "react-fetch-hook"
+import SiteInfo from './components/SiteInfo' ;
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 
 
+// function App() {
+//   const {campaign_id_list, setCampaignIdList} = useState([]);
 
+//   useEffect(() => {
+//     fetch("http:localhost:5000").then(response => 
+//       response.json().then(data => {
+//         setCampaignIdList(data.ids)
+//       })
+//     );
+//   }, []);
 
+//   return(
+//     <div className="App">
+//     <CampaignSelect campaign_id_list={campaign_id_list}/>
+//     </div>
+//   );
+// }
 
+// export default App;
 
 class App extends Component {
   constructor(props){
@@ -20,6 +35,7 @@ class App extends Component {
                   top_sites_info: {},
                   };
     this.handleSelect = this.handleSelect.bind(this);
+    // this.handleClick = this.handleClick.bind(this);
     this.selected_id = null
   }
   
@@ -37,29 +53,27 @@ class App extends Component {
       });
     }
 
-  handleSelect(e){
-  fetch(`http://localhost:5000/campaign_id`,{
-          'method':'POST',
-           headers : {
-          'Content-Type':'application/json'
-    },
-    body:JSON.stringify(e.target.value)
-  })
-  .then(response => response.json())
-  .catch(error => console.log(error))
- 
+    handleSelect(e){
+    <Router>
+      <Switch>
+          <Route path={'/'+e.target.value} children={<SiteInfo />} />
+        </Switch>
+      </Router>   
+    console.log(e.target.value)
+  }
+  
+  handleClick(e){
     async function fetching_data() {
-      const response = await fetch("http://localhost:5000/");
+      const response = await fetch("http://localhost:5000/site_info");
       const data = await response.json();
       return data;
     }
     fetching_data().then(data => {
       this.setState({
-        top_sites_info: data["top_sites"]
+        top_sites_info: data["site"],
       })
     });
   }
-  
     
 
   
@@ -74,10 +88,8 @@ class App extends Component {
       return options; 
     }
 
-    
-    
-    
   
+    
   return (
     
     <div className="App">
@@ -86,13 +98,18 @@ class App extends Component {
       <select name ="SelectCaptionId" id ="SelectCaptionId" onChange={this.handleSelect}>
         {prepare_options()}
       </select>
-      <div>
-        {this.state.top_sites}
-        </div>
       </div>
       
-    
-    </div>
+        <button onClick={this.handleClick}> Get Information </button>
+        
+        <div>
+          <ul>
+          {this.state.top_sites_info.map(listitem => (<li className="list-group-item list-group-item-primary">{listitem}</li>))}
+          </ul>
+          
+        </div>
+      </div>
+  
   );
   }
   
